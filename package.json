@@ -1,0 +1,19 @@
+{
+  "name": "fifa",
+  "version": "1.0.0",
+  "description": "Backend system for FIFA using microservice architecture",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Bhuvnesh Maheshwari",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "morgan": "^1.9.1",
+    "mysql2": "^1.6.5",
+    "sequelize": "^4.43.0"
+  }
+}
