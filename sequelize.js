@@ -1,6 +1,7 @@
 'use strict';
 const Sequelize = require('sequelize');
 const PersonalDetail = require('./models/personal_detail');
+const Affiliation = require('./models/affiliations');
 
 const sequelize = new Sequelize('fifa_team_selection', 'root', 'root', {
     host : "127.0.0.1",
@@ -8,6 +9,7 @@ const sequelize = new Sequelize('fifa_team_selection', 'root', 'root', {
 });
 
 const Player = PersonalDetail(sequelize, Sequelize);
+const PlayerAffiliations = Affiliation(sequelize, Sequelize);
 
 sequelize.sync()
 .then( ()=>{
@@ -16,5 +18,5 @@ sequelize.sync()
     console.log(`Could not connect to DB - ${err}`);
 });
 
-module.exports = Player;
+module.exports = {Player,PlayerAffiliations};
 

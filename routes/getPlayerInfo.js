@@ -1,28 +1,54 @@
 'use strict';
-const Player = require('../sequelize');
+const {Player,PlayerAffiliations} = require('../sequelize');
 module.exports = (app) => {
     app.get('/api/getPlayerInfo/:playerName', (req,res)=>{
-        console.log(`Query String ${req.params.playerName}`);
-        //const playerName = req.body.playerName;
+        
+        // Response object to be returned as final result 
+        // after querying from multiple tables
+        let playerDetails = {};
+        // Get the playerName from request parameters.
         const playerName = req.params.playerName;
 
-        // Get the personal details of the given player
+        // Query personal details of the given player
          Player.findAll({
              where : {
                  Name : playerName
              }
          })
-            .then(user => {
-                console.log(user);
-                if(user != null){
-                    console.log('User found!');
-                    res.status(200).json(user);
+            .then(personalDetails => {
+                console.log('Personal Details -----> ',personalDetails);
+                
+                if(personalDetails != null){
+                    playerDetails.personalDetails = personalDetails;
+                    const playerDetailsJSON = JSON.stringify(personalDetails);
+
+                    const playerId = JSON.parse(playerDetailsJSON)[0].ID;
+                    console.log(`PlayerId - ${playerId}`);
+
+                    // Query player's affilations table
+                    PlayerAffiliations.findAll({
+                        where : {
+                            ID : playerId
+                        }
+                    })
+                        .then(playerAffiliations => {
+                            console.log(`Player affiliations - ${JSON.stringify(playerAffiliations)}`);
+                            playerDetails.affiliation = playerAffiliations;
+
+                            res.status(200).json(playerDetails);
+                        })
+
+                        .catch(err => {
+                            console.log(`Error while quering Affiliations ${err}`);
+                        });
+
                 }
             })
 
             .catch(err => {
                 console.log(`Problem with database communication`);
                 res.status(500).json(err);
-            })
+            });
+
     })
 }
