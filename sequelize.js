@@ -2,6 +2,8 @@
 const Sequelize = require('sequelize');
 const PersonalDetail = require('./models/personal_detail');
 const Affiliation = require('./models/affiliations');
+const Stats = require('./models/stats');
+const Traits = require('./models/traits');
 
 const sequelize = new Sequelize('fifa_team_selection', 'root', 'root', {
     host : "127.0.0.1",
@@ -10,6 +12,8 @@ const sequelize = new Sequelize('fifa_team_selection', 'root', 'root', {
 
 const Player = PersonalDetail(sequelize, Sequelize);
 const PlayerAffiliations = Affiliation(sequelize, Sequelize);
+const PlayerTraits = Traits(sequelize, Sequelize);
+const PlayerStats = Stats(sequelize, Sequelize);
 
 sequelize.sync()
 .then( ()=>{
@@ -18,5 +22,10 @@ sequelize.sync()
     console.log(`Could not connect to DB - ${err}`);
 });
 
-module.exports = {Player,PlayerAffiliations};
+module.exports = {
+    Player,
+    PlayerAffiliations,
+    PlayerStats,
+    PlayerTraits
+};
 

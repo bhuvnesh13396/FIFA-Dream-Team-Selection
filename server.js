@@ -12,20 +12,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 var models = require('./models');
 
-// Sync Database
-// models.sequelize.sync().then( function(){
-//     console.log('Nice ! DB looks fine');
-// }).catch(function(err){
-//     console.log(err,'Something went wrong with database update!');
-// });
-
-
-
-// Routes
-// app.get('*',(req,res) => res.status(200).send({
-//     message : 'Welcome !!'
-// }));
-
 require('./routes/getPlayerInfo')(app);
 
 app.get('/',(req,res)=>{

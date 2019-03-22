@@ -1,5 +1,5 @@
 'use strict';
-const {Player,PlayerAffiliations} = require('../sequelize');
+const {Player, PlayerAffiliations, PlayerStats, PlayerTraits} = require('../sequelize');
 module.exports = (app) => {
     app.get('/api/getPlayerInfo/:playerName', (req,res)=>{
         
@@ -41,6 +41,40 @@ module.exports = (app) => {
                         .catch(err => {
                             console.log(`Error while quering Affiliations ${err}`);
                         });
+
+                        // Query player's stats table
+                        PlayerStats.findAll({
+                            where : {
+                                ID : playerId
+                            }
+                        })
+                            .then(playerStats => {
+                                console.log(`Player affiliations - ${JSON.stringify(playerStats)}`);
+                                playerDetails.stats = playerStats;
+    
+                                res.status(200).json(playerDetails);
+                            })
+    
+                            .catch(err => {
+                                console.log(`Error while quering Stats ${err}`);
+                            });
+
+                        // Query player's traits table
+                        PlayerTraits.findAll({
+                            where : {
+                                ID : playerId
+                            }
+                        })
+                            .then(playerTraits => {
+                                console.log(`Player affiliations - ${JSON.stringify(playerTraits)}`);
+                                playerDetails.traits = playerTraits;
+    
+                                res.status(200).json(playerDetails);
+                            })
+    
+                            .catch(err => {
+                                console.log(`Error while quering Stats ${err}`);
+                            });
 
                 }
             })
