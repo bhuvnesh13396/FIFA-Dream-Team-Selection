@@ -26,55 +26,36 @@ module.exports = (app) => {
                     console.log(`PlayerId - ${playerId}`);
 
                     // Query player's affilations table
-                    PlayerAffiliations.findAll({
+                    let playerAffiliations = PlayerAffiliations.findAll({
                         where : {
                             ID : playerId
                         }
-                    })
-                        .then(playerAffiliations => {
-                            console.log(`Player affiliations - ${JSON.stringify(playerAffiliations)}`);
-                            playerDetails.affiliation = playerAffiliations;
+                    });
+                        
+                    // Query player's stats table
+                    let playerStats = PlayerStats.findAll({
+                        where : {
+                            ID : playerId
+                        }
+                    });
+                           
 
-                            res.status(200).json(playerDetails);
-                        })
+                    // Query player's traits table
+                    let playerTraits = PlayerTraits.findAll({
+                        where : {
+                            ID : playerId
+                        }
+                    });
+                        
+                    // Return response after quering all the 
+                    // tables(affiliation, stats, trait)
+                    Promise.all([playerAffiliations, playerStats, playerTraits]).then(values => {
+                        playerDetails.affiliation = values[0];
+                        playerDetails.stats = values[1];
+                        playerDetails.traits = values[2];
 
-                        .catch(err => {
-                            console.log(`Error while quering Affiliations ${err}`);
-                        });
-
-                        // Query player's stats table
-                        PlayerStats.findAll({
-                            where : {
-                                ID : playerId
-                            }
-                        })
-                            .then(playerStats => {
-                                console.log(`Player affiliations - ${JSON.stringify(playerStats)}`);
-                                playerDetails.stats = playerStats;
-    
-                                res.status(200).json(playerDetails);
-                            })
-    
-                            .catch(err => {
-                                console.log(`Error while quering Stats ${err}`);
-                            });
-
-                        // Query player's traits table
-                        PlayerTraits.findAll({
-                            where : {
-                                ID : playerId
-                            }
-                        })
-                            .then(playerTraits => {
-                                console.log(`Player affiliations - ${JSON.stringify(playerTraits)}`);
-                                playerDetails.traits = playerTraits;
-    
-                                res.status(200).json(playerDetails);
-                            })
-    
-                            .catch(err => {
-                                console.log(`Error while quering Stats ${err}`);
-                            });
+                        res.status(200).json(playerDetails);
+                    });
 
                 }
             })
